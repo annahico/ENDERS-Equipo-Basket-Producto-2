@@ -1,0 +1,56 @@
+<div class="player-overlay">
+    <div class="player-detail">
+        <button class="close-btn" (click)="close()" aria-label="Cerrar detalle del jugador">✕</button>
+        <div class="card shadow-lg detail-card">
+            <div class="row g-0 align-items-center">
+                <!--Foto-->
+                <div class="col-12 col-md-4 text-center player-photo">
+                    <div class="player-photo-panel">
+                        <p class="player-tag">Jugador</p>
+                        <h3 class="player-name">{{player?.nombre}} {{player?.apellidos}}</h3>
+                        <img [src]="player?.foto" class="detail-img img-fluid m-3">
+                        <div class="player-stats">
+                            <p class="player-stat"><strong>Posición</strong><span>{{player?.posicion}}</span></p>
+                            <p class="player-stat"><strong>Edad</strong><span>{{player?.edad}} años</span></p>
+                            <p class="player-stat"><strong>Altura</strong><span>{{player?.altura}} m</span></p>
+                        </div>
+                    </div>
+                </div>
+                <!--Infomación y vídeo-->
+                <div class="col-12 col-md-8">
+                    <div class="card-body detail-body">
+                        <div class="media-header">
+                            <p class="media-kicker">Highlights</p>
+                            <h4 class="media-title">Vídeos del jugador</h4>
+                        </div>
+                        @if (player?.videos?.length) {
+                            <div class="video-carousel">
+                                @if (hasMultipleVideos() && currentVideoIndex > 0) {
+                                    <button 
+                                        class="video-btn left" 
+                                        (click)="prevVideo()">
+                                        ◀
+                                    </button>
+                                }
+                                <div class="carousel-window">
+                                    <div class="carousel-current">
+                                        <app-media-component 
+                                            [video]="player?.videos?.[currentVideoIndex]">
+                                        </app-media-component>
+                                    </div>
+                                </div>
+                                @if (hasMultipleVideos() && currentVideoIndex < (player?.videos?.length ?? 0) - 1) {
+                                    <button 
+                                        class="video-btn right"
+                                        (click)="nextVideo()">
+                                        ▶
+                                    </button>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
