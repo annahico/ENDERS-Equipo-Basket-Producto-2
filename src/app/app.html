@@ -24,7 +24,7 @@
                 <input class="form-control nav-search-input" placeholder="Buscar">
             </div>
         </div>
-    </nav> 
+    </nav>
 </header>
 @if (view === 'home'){
 <section class="background hero">
@@ -37,18 +37,16 @@
                 <h1>ENDERS<br>TEAM BASKET</h1>
             </div>
         </div>
-    </div>  
+    </div>
 </section>
 }
 @if (view === 'plantilla'){
 <section class="background">
-    <app-players-component (playerSelected)="selectedPlayer = $event"></app-players-component>
+    <app-players-component (playerSelected)="onPlayerSelected($event)"></app-players-component>
     @if(selectedPlayer){
-            <app-detail-component
-                [player]="selectedPlayer"
-                (closeDetail)="selectedPlayer = null">
-            </app-detail-component>
-        }
+    <app-detail-component [player]="selectedPlayer" (closeDetail)="selectedPlayer = null">
+    </app-detail-component>
+    }
 </section>
 }
 <footer class="text-center mt-5 site-footer">
@@ -56,4 +54,3 @@
     <p class="mb-2 footer-title">Universitat Oberta de Catalunya</p>
     <p class="mb-5 footer-subtitle">Desarrollo Front-End con Frameworks avanzados en entornos móviles</p>
 </footer>
-
