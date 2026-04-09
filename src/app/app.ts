@@ -12,6 +12,12 @@ import { PlayersComponent } from './components/players-component/players-compone
 export class App {
   protected readonly title = signal('equipo-basket-test');
   view = 'home';
-
   selectedPlayer?: Player | null;
+
+  onPlayerSelected(player: Player) {
+    this.selectedPlayer = null;
+    setTimeout(() => {
+      this.selectedPlayer = player;
+    }, 0);
+  }
 }
