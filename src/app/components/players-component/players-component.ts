@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, inject } from '@angular/core';
+import { Component, Output, EventEmitter, inject, ChangeDetectorRef } from '@angular/core';
 import { Player } from '../../models/player';
 import { FormsModule } from '@angular/forms';
 import { PlayersService } from '../../services/players.service';
@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 })
 export class PlayersComponent {
   private playersService = inject(PlayersService);
+  private cdr = inject(ChangeDetectorRef); // 👈 añadir esto
 
   players: Player[] = [];
   showFilters = false;
@@ -27,6 +28,7 @@ export class PlayersComponent {
     this.playersService.getPlayers().subscribe(data => {
       this.players = data;
       this.filteredPlayers = data;
+      this.cdr.detectChanges(); // 👈 añadir esto
     });
   }
 
