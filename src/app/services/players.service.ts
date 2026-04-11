@@ -1,28 +1,41 @@
-import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, collectionData, doc, addDoc, updateDoc, deleteDoc } from '@angular/fire/firestore';
+import { Injectable } from '@angular/core';
+import { initializeApp, getApps } from 'firebase/app';
+import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
 import { Observable } from 'rxjs';
-import { Player } from '../models/player'; 
+import { Player } from '../models/player';
+import { environment } from '../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class PlayersService {
-  private firestore = inject(Firestore);
-  private playersCollection = collection(this.firestore, 'players');
+  private app = getApps().length ? getApps()[0] : initializeApp(environment.firebaseConfig);
+  private db = getFirestore(this.app);
+  private colRef = collection(this.db, 'players');
 
   getPlayers(): Observable<Player[]> {
-    return collectionData(this.playersCollection, { idField: 'id' }) as Observable<Player[]>;
+    return new Observable(observer => {
+      const unsub = onSnapshot(this.colRef, snapshot => {
+        const players = snapshot.docs.map(d => ({
+          id: d.id,
+          ...d.data()
+        })) as Player[];
+        observer.next(players);
+      }, error => observer.error(error));
+      return () => unsub();
+    });
   }
 
   addPlayer(player: Player) {
-    return addDoc(this.playersCollection, player);
+    const { id, ...playerData } = player;
+    return addDoc(this.colRef, playerData);
   }
 
   updatePlayer(id: string, player: Partial<Player>) {
-    const playerDoc = doc(this.firestore, `players/${id}`);
+    const playerDoc = doc(this.db, `players/${id}`);
     return updateDoc(playerDoc, player);
   }
 
   deletePlayer(id: string) {
-    const playerDoc = doc(this.firestore, `players/${id}`);
+    const playerDoc = doc(this.db, `players/${id}`);
     return deleteDoc(playerDoc);
   }
 }

@@ -14,4 +14,13 @@ export class App {
   view = 'home';
 
   selectedPlayer?: Player | null;
+
+  onPlayerSelected(player: Player){
+    this.selectedPlayer = player;
+    document.body.classList.add('model-open');
+  }
+  closeDetail(){
+    this.selectedPlayer = null;
+    document.body.classList.remove('model-open')
+  }
 }
