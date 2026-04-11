@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 })
 export class PlayersComponent {
   private playersService = inject(PlayersService);
-  private cdr = inject(ChangeDetectorRef); // 👈 añadir esto
+  private cdr = inject(ChangeDetectorRef); 
 
   players: Player[] = [];
   showFilters = false;
@@ -28,7 +28,7 @@ export class PlayersComponent {
     this.playersService.getPlayers().subscribe(data => {
       this.players = data;
       this.filteredPlayers = data;
-      this.cdr.detectChanges(); // 👈 añadir esto
+      this.cdr.detectChanges(); 
     });
   }
 

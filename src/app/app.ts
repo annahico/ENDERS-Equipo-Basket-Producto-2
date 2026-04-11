@@ -12,12 +12,15 @@ import { PlayersComponent } from './components/players-component/players-compone
 export class App {
   protected readonly title = signal('equipo-basket-test');
   view = 'home';
+
   selectedPlayer?: Player | null;
 
-  onPlayerSelected(player: Player) {
+  onPlayerSelected(player: Player){
+    this.selectedPlayer = player;
+    document.body.classList.add('model-open');
+  }
+  closeDetail(){
     this.selectedPlayer = null;
-    setTimeout(() => {
-      this.selectedPlayer = player;
-    }, 0);
+    document.body.classList.remove('model-open')
   }
 }
