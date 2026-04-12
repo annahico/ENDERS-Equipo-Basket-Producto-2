@@ -6,20 +6,34 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-players-component',
+  standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './players-component.html',
   styleUrl: './players-component.css',
 })
 export class PlayersComponent {
   private playersService = inject(PlayersService);
-  private cdr = inject(ChangeDetectorRef); 
+  private cdr = inject(ChangeDetectorRef);
 
   players: Player[] = [];
+  filteredPlayers: Player[] = [];
   showFilters = false;
+  mostrarFormulario = false;
   searchText: string = '';
   positionFilter: string = '';
   ageFilter?: number;
-  filteredPlayers: Player[] = [];
+  videoInput: string = '';
+
+  nuevoJugador: Player = {
+    id: '',
+    nombre: '',
+    apellidos: '',
+    posicion: '',
+    edad: 0,
+    altura: 0.0,
+    foto: '',
+    videos: []
+  };
 
   @Output()
   playerSelected = new EventEmitter<Player>();
@@ -28,7 +42,7 @@ export class PlayersComponent {
     this.playersService.getPlayers().subscribe(data => {
       this.players = data;
       this.filteredPlayers = data;
-      this.cdr.detectChanges(); 
+      this.cdr.detectChanges();
     });
   }
 
@@ -38,11 +52,56 @@ export class PlayersComponent {
 
   applyFilters() {
     this.filteredPlayers = this.players.filter(player => {
-      const matchName = player.nombre.toLowerCase().includes(this.searchText.toLowerCase()) ||
-                        player.apellidos.toLowerCase().includes(this.searchText.toLowerCase());
-      const matchPosition = this.positionFilter === '' || player.posicion === this.positionFilter;
-      const matchAge = !this.ageFilter || player.edad <= this.ageFilter;
+      const matchName =
+        player.nombre.toLowerCase().includes(this.searchText.toLowerCase()) ||
+        player.apellidos.toLowerCase().includes(this.searchText.toLowerCase());
+      const matchPosition =
+        this.positionFilter === '' || player.posicion === this.positionFilter;
+      const matchAge =
+        !this.ageFilter || player.edad <= this.ageFilter;
       return matchName && matchPosition && matchAge;
     });
+  }
+
+  toggleFormulario() {
+    this.mostrarFormulario = !this.mostrarFormulario;
+  }
+
+  async addPlayer() {
+    const jugadorNuevo: Omit<Player, 'id'> = {
+      nombre: this.nuevoJugador.nombre,
+      apellidos: this.nuevoJugador.apellidos,
+      posicion: this.nuevoJugador.posicion,
+      edad: this.nuevoJugador.edad,
+      altura: this.nuevoJugador.altura,
+      foto: this.nuevoJugador.foto,
+      videos: this.videoInput ? [this.videoInput] : []
+    };
+
+    try {
+      await this.playersService.addPlayer(jugadorNuevo as Player);
+      this.nuevoJugador = {
+        id: '',
+        nombre: '',
+        apellidos: '',
+        posicion: '',
+        edad: 0,
+        altura: 0.0,
+        foto: '',
+        videos: []
+      };
+      this.videoInput = '';
+      this.mostrarFormulario = false;
+    } catch(error) {
+      console.error('Error al añadir jugador', error);
+    }
+  }
+
+  async deletePlayer(id: string) {
+    try {
+      await this.playersService.deletePlayer(id);
+    } catch(error) {
+      console.error('Error al borrar jugador', error);
+    }
   }
 }

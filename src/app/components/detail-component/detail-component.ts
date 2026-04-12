@@ -95,6 +95,7 @@ export class DetailComponent {
       };
 
       this.isEditing = false;
+      this.closeDetail.emit();
     }catch (error){
       console.log('Error al actualizar jugador', error);
     }
