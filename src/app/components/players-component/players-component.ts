@@ -17,14 +17,11 @@ export class PlayersComponent {
 
   players: Player[] = [];
   filteredPlayers: Player[] = [];
-
   showFilters = false;
   mostrarFormulario = false;
-
   searchText: string = '';
   positionFilter: string = '';
   ageFilter?: number;
-
   videoInput: string = '';
 
   nuevoJugador: Player = {
@@ -33,7 +30,7 @@ export class PlayersComponent {
     apellidos: '',
     posicion: '',
     edad: 0,
-    altura: 0,
+    altura: 0.0,
     foto: '',
     videos: []
   };
@@ -58,13 +55,10 @@ export class PlayersComponent {
       const matchName =
         player.nombre.toLowerCase().includes(this.searchText.toLowerCase()) ||
         player.apellidos.toLowerCase().includes(this.searchText.toLowerCase());
-
       const matchPosition =
         this.positionFilter === '' || player.posicion === this.positionFilter;
-
       const matchAge =
         !this.ageFilter || player.edad <= this.ageFilter;
-
       return matchName && matchPosition && matchAge;
     });
   }
@@ -73,33 +67,41 @@ export class PlayersComponent {
     this.mostrarFormulario = !this.mostrarFormulario;
   }
 
-  addPlayer() {
-    const jugadorNuevo: Player = {
-      ...this.nuevoJugador,
-      id: Date.now().toString(),
+  async addPlayer() {
+    const jugadorNuevo: Omit<Player, 'id'> = {
+      nombre: this.nuevoJugador.nombre,
+      apellidos: this.nuevoJugador.apellidos,
+      posicion: this.nuevoJugador.posicion,
+      edad: this.nuevoJugador.edad,
+      altura: this.nuevoJugador.altura,
+      foto: this.nuevoJugador.foto,
       videos: this.videoInput ? [this.videoInput] : []
     };
 
-    this.players.push(jugadorNuevo);
-    this.filteredPlayers = [...this.players];
-
-    this.nuevoJugador = {
-      id: '',
-      nombre: '',
-      apellidos: '',
-      posicion: '',
-      edad: 0,
-      altura: 0,
-      foto: '',
-      videos: []
-    };
-
-    this.videoInput = '';
-    this.mostrarFormulario = false;
+    try {
+      await this.playersService.addPlayer(jugadorNuevo as Player);
+      this.nuevoJugador = {
+        id: '',
+        nombre: '',
+        apellidos: '',
+        posicion: '',
+        edad: 0,
+        altura: 0.0,
+        foto: '',
+        videos: []
+      };
+      this.videoInput = '';
+      this.mostrarFormulario = false;
+    } catch(error) {
+      console.error('Error al añadir jugador', error);
+    }
   }
 
-  deletePlayer(id: string) {
-    this.players = this.players.filter(player => player.id !== id);
-    this.filteredPlayers = [...this.players];
+  async deletePlayer(id: string) {
+    try {
+      await this.playersService.deletePlayer(id);
+    } catch(error) {
+      console.error('Error al borrar jugador', error);
+    }
   }
 }
