@@ -1,9 +1,17 @@
 import { Injectable } from '@angular/core';
 import { initializeApp, getApps } from 'firebase/app';
-import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  onSnapshot
+} from 'firebase/firestore';
 import { Observable } from 'rxjs';
 import { Player } from '../models/player';
-import { environment } from '../environments/environment';
+import { environment } from '../enviroments/enviroment';
 
 @Injectable({ providedIn: 'root' })
 export class PlayersService {
