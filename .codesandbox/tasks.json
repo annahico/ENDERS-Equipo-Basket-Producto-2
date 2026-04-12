@@ -7,33 +7,13 @@
     }
   ],
   "tasks": {
-    "ng": {
-      "name": "ng",
-      "command": "npm run ng",
-      "runAtStart": false
-    },
     "start": {
       "name": "start",
-      "command": "npm start -- --host 0.0.0.0",
+      "command": "npx -y node@24.11.1 ./node_modules/@angular/cli/bin/ng serve --host 0.0.0.0",
       "runAtStart": true,
       "preview": {
         "port": 4200
       }
-    },
-    "build": {
-      "name": "build",
-      "command": "npm run build",
-      "runAtStart": false
-    },
-    "watch": {
-      "name": "watch",
-      "command": "npm run watch",
-      "runAtStart": false
-    },
-    "test": {
-      "name": "test",
-      "command": "npm run test",
-      "runAtStart": false
     }
   }
 }
