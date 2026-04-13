@@ -1,0 +1,19 @@
+{
+  "$schema": "https://codesandbox.io/schemas/tasks.json",
+  "setupTasks": [
+    {
+      "command": "npm install",
+      "name": "Installing Dependencies"
+    }
+  ],
+  "tasks": {
+    "start": {
+      "name": "start",
+      "command": "npx -y node@24.11.1 ./node_modules/@angular/cli/bin/ng serve --host 0.0.0.0",
+      "runAtStart": true,
+      "preview": {
+        "port": 4200
+      }
+    }
+  }
+}
